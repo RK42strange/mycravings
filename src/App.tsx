@@ -237,7 +237,7 @@ function readWallet() {
   }
 }
 
-type DishPhotoProps = { item: MenuItem; credit?: ImageCredit; compact?: boolean }
+/* type DishPhotoProps = { item: MenuItem; credit?: ImageCredit; compact?: boolean }
 
 function DishPhoto({ item, credit, compact = false }: DishPhotoProps) {
   if (!credit) {
@@ -247,6 +247,17 @@ function DishPhoto({ item, credit, compact = false }: DishPhotoProps) {
   return <>
     <img className={compact ? 'cart-dish-photo' : 'dish-photo'} src={`/images/dishes/${credit.file}`} alt={item.name} onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = item.image }} />
     {!compact && <a className="photo-credit" href={credit.source} target="_blank" rel="noreferrer" aria-label={`Photo by ${credit.creator}, ${credit.license}, via Wikimedia Commons`}>Photo: {credit.creator} · {credit.license}</a>}
+  </>
+} */
+
+  type DishPhotoProps = { item: MenuItem; credit?: ImageCredit; compact?: boolean }
+
+function DishPhoto({ item, credit, compact = false }: DishPhotoProps) {
+  // Fallback directly to item.localImage if credit isn't found
+  const imageSrc = credit ? `/images/dishes/${credit.file}` : item.localImage
+
+  return <>
+    <img className={compact ? 'cart-dish-photo' : 'dish-photo'} src={imageSrc} alt={item.name} onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = item.image }} />
   </>
 }
 
