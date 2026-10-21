@@ -17,5 +17,6 @@ Open the local URL printed by Vite. To verify a production build, run `npm run b
 - Pay by Points simulates checkout, deducts the cart total, and displays a local receipt. Card, UPI, and cash-on-delivery options are inactive gag buttons.
 - No database, Supabase, real payment processing, or delivery integration is used.
 - Checkout jokes, search roast pools, and per-dish roast lines are editable in `public/data/roasts.json`. The app rotates through each pool without repeating a line until the pool is exhausted; used line IDs persist in browser local storage.
-- Add a local image as `public/images/dishes/<dish-id>.webp` (for example, `public/images/dishes/butter-chicken.webp`). The dish ID is the first argument of its entry in `src/App.tsx`. Local images take priority; the existing Unsplash photo is used if the local file is missing.
+- Sourced dish photos are stored locally in `public/images/dishes/` and credited in `public/images/dishes/credits.json`. The app uses Commons photos only when a verified credit entry exists; unmatched dishes show a neutral photo placeholder instead of an unrelated image.
+- SEO metadata, canonical URL, robots rules, JSON-LD and sitemap are configured for `https://mycravings.in/`. Google search-result changes take time; use Google Search Console to request recrawls or remove outdated URLs.
 - Menu and nutrition values are illustrative estimates, not restaurant listings or medical advice. On mobile, dish searches scroll the results into view while keeping the search header sticky.

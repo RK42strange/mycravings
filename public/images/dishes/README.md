@@ -2,8 +2,10 @@
 
 Drop local food photos in this folder using the dish ID as the filename, for example:
 
-- `butter-chicken.webp`
-- `pani-puri.webp`
-- `manchurian.webp`
+- `butter-chicken.jpg`
+- `pani-puri.jpg`
+- `manchurian.jpg`
 
-The app checks `/images/dishes/<dish-id>.webp` first and falls back to the current Unsplash photo if a local file is not present. Supported browser image formats include WebP, JPG, PNG, and AVIF; if you use another extension, update the image path in the menu data in `src/App.tsx`.
+The app displays `/images/dishes/<dish-id>.jpg` only when that dish has an entry in `credits.json`; otherwise it shows a neutral "Photo not added" tile. Add the image credit entry before adding a Commons or other licensed photo. The card links to the original source and displays the creator and license.
+
+`credits.json` records the downloaded Commons file title, author, license, and source page for each included photo.

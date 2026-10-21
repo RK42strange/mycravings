@@ -26,10 +26,11 @@ type RoastLibrary = {
   searchReplies: Record<string, string[]>
   dishReplies: Record<string, string>
 }
+type ImageCredit = { file: string; title: string; creator: string; license: string; licenseUrl: string; source: string }
+type ImageCredits = Record<string, ImageCredit>
 
-const image = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=900&q=85`
 const normalizeSearch = (value: string) => value.toLowerCase().replace(/panner/g, 'paneer').trim()
-const dish = (id: string, name: string, restaurant: string, cuisine: string, price: number, calories: number, vegetarian: boolean, description: string, imageId: string, extras: Partial<MenuItem> = {}): MenuItem => ({ id, name, restaurant, cuisine, price, calories, vegetarian, description, image: image(imageId), localImage: `/images/dishes/${id}.webp`, ...extras })
+const dish = (id: string, name: string, restaurant: string, cuisine: string, price: number, calories: number, vegetarian: boolean, description: string, extras: Partial<MenuItem> = {}): MenuItem => ({ id, name, restaurant, cuisine, price, calories, vegetarian, description, image: '/images/dishes/photo-not-added.svg', localImage: `/images/dishes/${id}.jpg`, ...extras })
 
 function searchPoolForDish(item: MenuItem) {
   const text = `${item.id} ${item.name}`.toLowerCase()
@@ -51,82 +52,82 @@ function selectUnusedRoast(poolId: string, lines: string[], used: string[]) {
 }
 
 const menu: MenuItem[] = [
-  dish('butter-chicken', 'Butter Chicken & Naan', 'Pepper & Hearth', 'North Indian', 460, 850, false, 'Slow-simmered tomato and cream curry, finished with fenugreek and soft tandoor naan.', 'photo-1603894584373-5ac82b2ae398', { bestseller: true }),
-  dish('paneer-tikka', 'Smoky Paneer Tikka', 'Pepper & Hearth', 'North Indian', 320, 420, true, 'Charred paneer with a lively spice crust, mint chutney and a squeeze of lime.', 'photo-1603894584373-5ac82b2ae398'),
-  dish('garlic-naan', 'Garlic Butter Naan', 'Pepper & Hearth', 'North Indian', 110, 310, true, 'Soft tandoor naan brushed with garlic butter and fresh coriander.', 'photo-1628294895950-9805252327bc'),
-  dish('podi-dosa', 'Podi Ghee Roast Dosa', 'Malli’s Tiffin Room', 'South Indian', 250, 510, true, 'A crisp rice-lentil dosa dusted with house podi and golden ghee.', 'photo-1589301760014-d929f3979dbc', { bestseller: true, fried: true }),
-  dish('idli-vada', 'Idli & Medu Vada', 'Malli’s Tiffin Room', 'South Indian', 190, 390, true, 'Soft idlis and a crisp lentil vada with coconut chutney and sambar.', 'photo-1589301760014-d929f3979dbc', { fried: true }),
-  dish('dum-biryani', 'Chicken Dum Biryani', 'Deccan Dum House', 'Hyderabadi', 390, 740, false, 'Fragrant basmati and spiced chicken sealed together for a slow dum finish.', 'photo-1603894584373-5ac82b2ae398', { bestseller: true }),
-  dish('haleem', 'Hyderabadi Haleem', 'Deccan Dum House', 'Hyderabadi', 340, 610, false, 'A patient-cooked blend of lentils, wheat and tender meat, topped with fried onions.', 'photo-1603894584373-5ac82b2ae398'),
-  dish('kosha', 'Kosha Mangsho', 'Mishti Bari', 'Bengali', 420, 680, false, 'A deep, slow-cooked Bengali mutton curry with warming whole spices.', 'photo-1547592180-85f173990554'),
-  dish('mishti-doi', 'Mishti Doi', 'Mishti Bari', 'Bengali', 140, 220, true, 'Sweetened, gently set yoghurt chilled in a clay pot.', 'photo-1578985545062-69928b1d9587', { dessert: true }),
-  dish('khandvi', 'Khandvi Rolls', 'Saffron & Sesame', 'Gujarati', 180, 260, true, 'Delicate gram-flour rolls with mustard seeds, curry leaves and fresh coconut.', 'photo-1547592180-85f173990554', { bestseller: true }),
-  dish('gujarati-thali', 'Gujarati Mini Thali', 'Saffron & Sesame', 'Gujarati', 360, 780, true, 'A bright spread of seasonal shaak, dal, rice, rotli and something sweet.', 'photo-1547592180-85f173990554'),
-  dish('pepper-chicken', 'Chettinad Pepper Chicken', 'Karaikudi Table', 'Chettinad', 390, 590, false, 'Chicken tossed with cracked pepper, curry leaves and roasted masala.', 'photo-1603894584373-5ac82b2ae398'),
-  dish('parotta', 'Ghee Roast Parotta', 'Karaikudi Table', 'Chettinad', 150, 430, true, 'Flaky layered parotta griddled until crisp at the edges.', 'photo-1603894584373-5ac82b2ae398', { fried: true }),
-  dish('pav-bhaji', 'Mumbai Pav Bhaji', 'Chowpatty Stop', 'Indian Street Food', 220, 560, true, 'Butter-toasted pav beside a bright vegetable bhaji with lemon and onion.', 'photo-1601050690597-df0568f70950', { bestseller: true }),
-  dish('samosa-chaat', 'Samosa Chaat', 'Chowpatty Stop', 'Indian Street Food', 190, 480, true, 'Samosa layered with chickpeas, yoghurt and sweet-spicy chutneys.', 'photo-1601050690597-df0568f70950', { fried: true }),
-  dish('salmon-roll', 'Salmon Avocado Roll', 'Little Tokyo', 'Japanese', 520, 460, false, 'Salmon and ripe avocado rolled with seasoned rice and a dab of wasabi.', 'photo-1579871494447-9811cf80d66c', { bestseller: true }),
-  dish('tuna-roll', 'Spicy Tuna Roll', 'Little Tokyo', 'Japanese', 490, 430, false, 'Tuna, cucumber and seasoned rice wrapped with nori and a little chilli mayo.', 'photo-1579871494447-9811cf80d66c'),
-  dish('katsu-curry', 'Chicken Katsu Curry', 'Little Tokyo', 'Japanese', 480, 790, false, 'Crisp panko chicken over rice with a mild Japanese curry.', 'photo-1579871494447-9811cf80d66c', { fried: true }),
-  dish('bibimbap', 'Garden Bibimbap', 'Seoul Kitchen', 'Korean', 410, 620, true, 'Rice topped with seasoned vegetables, a sunny egg and gochujang on the side.', 'photo-1546069901-ba9599a7e63c'),
-  dish('kimchi-rice', 'Kimchi Fried Rice', 'Seoul Kitchen', 'Korean', 360, 570, true, 'Wok-fried rice with tangy kimchi, sesame and a soft egg on top.', 'photo-1555126634-323283e090fa'),
-  dish('yangnyeom', 'Yangnyeom Fried Chicken', 'Seoul Kitchen', 'Korean', 490, 810, false, 'Crisp chicken glazed in a sticky, sweet-heat Korean chilli sauce.', 'photo-1546069901-ba9599a7e63c', { bestseller: true, fried: true }),
-  dish('chilli-paneer', 'Chilli Paneer', 'Wok This Way', 'Chinese', 330, 510, true, 'Paneer, peppers and spring onion tossed in a punchy Indo-Chinese sauce.', 'photo-1525755662778-989d0524087e'),
-  dish('manchow', 'Veg Manchow Soup', 'Wok This Way', 'Chinese', 190, 240, true, 'A warming, peppery vegetable broth topped with crisp noodles.', 'photo-1525755662778-989d0524087e'),
-  dish('pad-thai', 'Classic Pad Thai', 'Lemongrass Lane', 'Thai', 420, 680, true, 'Rice noodles, tamarind, crunchy peanuts and lime, tossed fresh in the wok.', 'photo-1559314809-0d155014e29e', { bestseller: true }),
-  dish('green-curry', 'Thai Green Curry', 'Lemongrass Lane', 'Thai', 450, 590, true, 'Fragrant coconut curry with basil and seasonal vegetables, served with jasmine rice.', 'photo-1559314809-0d155014e29e'),
-  dish('margherita', 'Woodfired Margherita', 'Forno Social', 'Italian', 440, 720, true, 'A blistered sourdough base with tomato, mozzarella and fragrant basil.', 'photo-1579751626657-72bc17010498', { bestseller: true }),
-  dish('tiramisu', 'Classic Tiramisu', 'Forno Social', 'Italian', 260, 390, true, 'Espresso-soaked sponge layered with mascarpone and a cocoa finish.', 'photo-1578985545062-69928b1d9587', { dessert: true }),
-  dish('tacos', 'Al Pastor Tacos', 'Casa Picante', 'Mexican', 380, 560, false, 'Three soft tacos with achiote-spiced filling, pineapple salsa and lime.', 'photo-1552332386-f8dd00dc2f85'),
-  dish('quesadilla', 'Cheesy Quesadilla', 'Casa Picante', 'Mexican', 340, 610, true, 'Golden folded tortilla with melted cheese, peppers and smoky salsa.', 'photo-1552332386-f8dd00dc2f85'),
-  dish('lava-cake', 'Chocolate Lava Cake', 'Sugar Theory', 'Desserts', 240, 480, true, 'A warm cocoa cake with a soft, molten centre, ready for a spoon.', 'photo-1578985545062-69928b1d9587', { bestseller: true, dessert: true }),
-  dish('gulab-jamun', 'Gulab Jamun (2 pcs)', 'Sugar Theory', 'Desserts', 160, 330, true, 'Soft milk dumplings steeped in cardamom-scented syrup.', 'photo-1578985545062-69928b1d9587', { dessert: true }),
-  dish('tandoori-platter', 'Tandoori Sharing Platter', 'Pepper & Hearth', 'North Indian', 620, 920, false, 'A mixed grill of tandoori chicken, seekh kebab and charred peppers with green chutney.', 'photo-1555939594-58d7cb561ad1', { bestseller: true, fried: true }),
-  dish('chole-bhature', 'Chole Bhature', 'Pepper & Hearth', 'North Indian', 280, 740, true, 'Punjabi chickpeas simmered with warming spices beside two puffed bhature.', 'photo-1601050690597-df0568f70950', { fried: true }),
-  dish('dal-makhani', 'Dal Makhani', 'Pepper & Hearth', 'North Indian', 310, 560, true, 'Black lentils slow-cooked overnight with tomato, butter and a touch of cream.', 'photo-1547592180-85f173990554'),
-  dish('uttapam', 'Onion Tomato Uttapam', 'Malli’s Tiffin Room', 'South Indian', 220, 440, true, 'A soft, savoury rice pancake topped with onion, tomato and green chilli.', 'photo-1630383249896-424e482df921'),
-  dish('appam-stew', 'Appam with Vegetable Stew', 'Malli’s Tiffin Room', 'South Indian', 290, 520, true, 'Lacy appams served with vegetables in a gently spiced coconut milk stew.', 'photo-1589301760014-d929f3979dbc'),
-  dish('sambar-rice', 'Sambar Rice', 'Malli’s Tiffin Room', 'South Indian', 210, 430, true, 'Rice and lentils simmered with tamarind, vegetables and a fragrant tempering.', 'photo-1512621776951-a57141f2eefd'),
-  dish('kachhi-biryani', 'Kachhi Yakhni Mutton Biryani', 'Deccan Dum House', 'Hyderabadi', 520, 890, false, 'Marinated mutton and basmati cook together under a sealed, slow-steamed lid.', 'photo-1565557623262-b51c2513a641', { bestseller: true }),
-  dish('mirchi-salan', 'Mirchi ka Salan', 'Deccan Dum House', 'Hyderabadi', 240, 390, true, 'Green chillies in a tangy peanut, sesame and tamarind gravy.', 'photo-1603894584373-5ac82b2ae398'),
-  dish('shorshe-ilish', 'Shorshe Ilish', 'Mishti Bari', 'Bengali', 490, 610, false, 'Hilsa steamed in a bright mustard and green-chilli sauce.', 'photo-1604908176997-125f25cc6f3d'),
-  dish('dhokar-dalna', 'Dhokar Dalna', 'Mishti Bari', 'Bengali', 310, 470, true, 'Bengal gram cakes simmered in a lightly spiced tomato and ginger gravy.', 'photo-1547592180-85f173990554'),
-  dish('luchi-aloor-dom', 'Luchi & Aloor Dom', 'Mishti Bari', 'Bengali', 280, 650, true, 'Puffed luchi with potatoes simmered in a gently spiced Bengali gravy.', 'photo-1601050690597-df0568f70950', { fried: true }),
-  dish('rosogolla', 'Rosogolla (2 pcs)', 'Mishti Bari', 'Bengali', 130, 290, true, 'Soft chhena dumplings soaked in a light, fragrant syrup.', 'photo-1551024506-0bccd828d307', { dessert: true }),
-  dish('sev-khaman', 'Sev Khaman', 'Saffron & Sesame', 'Gujarati', 170, 310, true, 'Steamed gram-flour cake finished with sev, green chilli and sweet chutney.', 'photo-1547592180-85f173990554'),
-  dish('khaman-dhokla', 'Nylon Khaman Dhokla', 'Saffron & Sesame', 'Gujarati', 160, 270, true, 'Soft, airy gram-flour squares topped with mustard seeds and coriander.', 'photo-1512621776951-a57141f2eefd'),
-  dish('thepla', 'Methi Thepla (3 pcs)', 'Saffron & Sesame', 'Gujarati', 190, 360, true, 'Fenugreek flatbreads with a mellow spice blend and cooling yoghurt.', 'photo-1628294895950-9805252327bc'),
-  dish('fafda-jalebi', 'Fafda & Jalebi', 'Saffron & Sesame', 'Gujarati', 230, 590, true, 'Crisp chickpea-flour ribbons with warm, syrupy jalebi.', 'photo-1551024506-0bccd828d307', { dessert: true, fried: true }),
-  dish('kozhi-kuzhambu', 'Kozhi Kuzhambu', 'Karaikudi Table', 'Chettinad', 370, 630, false, 'Chicken in a bold Chettinad gravy with toasted spices and curry leaves.', 'photo-1604908176997-125f25cc6f3d'),
-  dish('meen-varuval', 'Meen Varuval', 'Karaikudi Table', 'Chettinad', 430, 510, false, 'Fish steaks coated in peppery masala and pan-fried until crisp.', 'photo-1559737558-2f5a35f4523b', { fried: true }),
-  dish('pani-puri', 'Pani Puri (6 pcs)', 'Chowpatty Stop', 'Indian Street Food', 140, 290, true, 'Crisp puris with potato, chickpeas and a sharp mint-tamarind pani.', 'photo-1601050690597-df0568f70950', { bestseller: true }),
-  dish('vada-pav', 'Mumbai Vada Pav', 'Chowpatty Stop', 'Indian Street Food', 130, 430, true, 'Spiced potato fritter tucked into a soft pav with garlic chutney.', 'photo-1565299507177-b0ac66763828', { fried: true }),
-  dish('aloo-tikki', 'Aloo Tikki Chaat', 'Chowpatty Stop', 'Indian Street Food', 180, 390, true, 'Crisp potato patties topped with chickpeas, yoghurt and two chutneys.', 'photo-1601050690597-df0568f70950', { fried: true }),
-  dish('chole-kulche', 'Amritsari Chole Kulche', 'Chowpatty Stop', 'Indian Street Food', 240, 610, true, 'Flaky kulcha with tangy chickpeas, onion and a wedge of lemon.', 'photo-1601050690597-df0568f70950'),
-  dish('tonkotsu-ramen', 'Tonkotsu Ramen', 'Little Tokyo', 'Japanese', 510, 790, false, 'Rich pork broth with noodles, bamboo shoots, greens and a jammy egg.', 'photo-1569718212165-3a8278d5f624', { bestseller: true }),
-  dish('gyoza', 'Pan-Seared Chicken Gyoza', 'Little Tokyo', 'Japanese', 320, 410, false, 'Six dumplings with crisp golden bases and a ginger-soy dipping sauce.', 'photo-1563245372-f21724e3856d'),
-  dish('tempura', 'Prawn Tempura', 'Little Tokyo', 'Japanese', 460, 520, false, 'Lightly battered prawns fried crisp and served with tentsuyu dip.', 'photo-1625944525533-473f1a3d54e7', { fried: true }),
-  dish('tteokbokki', 'Spicy Tteokbokki', 'Seoul Kitchen', 'Korean', 350, 540, true, 'Chewy rice cakes in a glossy gochujang sauce with scallions.', 'photo-1555126634-323283e090fa', { bestseller: true }),
-  dish('jjajangmyeon', 'Jjajangmyeon', 'Seoul Kitchen', 'Korean', 390, 680, false, 'Springy noodles with a savoury black-bean sauce and diced vegetables.', 'photo-1555126634-323283e090fa'),
-  dish('schezwan-noodles', 'Schezwan Hakka Noodles', 'Wok This Way', 'Chinese', 290, 540, true, 'Wok-tossed noodles with vegetables and a lively chilli-garlic sauce.', 'photo-1603133872878-684f208fb84b'),
-  dish('dim-sum', 'Steamed Vegetable Dim Sum', 'Wok This Way', 'Chinese', 280, 320, true, 'Delicate dumplings filled with seasoned vegetables and served with chilli oil.', 'photo-1563245372-f21724e3856d'),
-  dish('chilli-chicken', 'Chilli Chicken', 'Wok This Way', 'Chinese', 360, 570, false, 'Crisp chicken tossed with chillies, peppers and spring onion.', 'photo-1626082927389-6cd097cdc6ec', { fried: true }),
-  dish('manchurian', 'Veg Manchurian', 'Wok This Way', 'Chinese', 310, 520, true, 'Vegetable dumplings tossed with spring onion in a savoury Indo-Chinese sauce.', 'photo-1525755662778-989d0524087e'),
-  dish('mapo-tofu', 'Mapo Tofu', 'Wok This Way', 'Chinese', 340, 490, true, 'Silky tofu in a tingling Sichuan pepper and chilli bean sauce.', 'photo-1547592180-85f173990554'),
-  dish('red-curry', 'Thai Red Curry', 'Lemongrass Lane', 'Thai', 450, 610, true, 'Coconut curry with red chilli, basil and vegetables, served with jasmine rice.', 'photo-1559314809-0d155014e29e'),
-  dish('tom-yum', 'Tom Yum Soup', 'Lemongrass Lane', 'Thai', 330, 290, false, 'Hot-and-sour broth with lemongrass, lime and mushrooms.', 'photo-1569718212165-3a8278d5f624'),
-  dish('mango-sticky-rice', 'Mango Sticky Rice', 'Lemongrass Lane', 'Thai', 280, 430, true, 'Sweet coconut sticky rice with ripe mango and toasted sesame.', 'photo-1484723091739-30a097e8f929', { dessert: true }),
-  dish('carbonara', 'Pasta Carbonara', 'Forno Social', 'Italian', 480, 760, false, 'Silky pasta with parmesan, cracked pepper and crisp pancetta.', 'photo-1473093295043-cdd812d0e601', { bestseller: true }),
-  dish('lasagna', 'Beef Lasagna', 'Forno Social', 'Italian', 510, 790, false, 'Layers of pasta, slow-cooked beef ragù and bubbling béchamel.', 'photo-1574894709920-11b28e7367e3'),
-  dish('alfredo', 'Fettuccine Alfredo', 'Forno Social', 'Italian', 430, 680, true, 'Ribbons of fettuccine in a parmesan cream sauce with parsley.', 'photo-1473093295043-cdd812d0e601'),
-  dish('birria-tacos', 'Birria Street Tacos', 'Casa Picante', 'Mexican', 430, 640, false, 'Slow-braised beef tacos with melted cheese and a side of dipping consomé.', 'photo-1552332386-f8dd00dc2f85', { bestseller: true }),
-  dish('loaded-burrito', 'Loaded Bean Burrito', 'Casa Picante', 'Mexican', 390, 720, true, 'A warm tortilla packed with beans, rice, salsa, corn and melted cheese.', 'photo-1565299507177-b0ac66763828'),
-  dish('nachos', 'Loaded Nachos', 'Casa Picante', 'Mexican', 360, 690, true, 'Crisp tortilla chips with beans, queso, jalapeño and fresh pico de gallo.', 'photo-1513456852971-30c0b8199d4d'),
-  dish('churros', 'Cinnamon Churros', 'Casa Picante', 'Mexican', 240, 470, true, 'Warm cinnamon-sugar churros with a cup of dark chocolate dip.', 'photo-1551024506-0bccd828d307', { dessert: true, fried: true }),
-  dish('cheesecake', 'New York Cheesecake', 'Sugar Theory', 'Desserts', 280, 430, true, 'Creamy baked cheesecake on a crumbly biscuit base with berry compote.', 'photo-1533134242443-d4fd215305ad', { bestseller: true, dessert: true }),
-  dish('rasmalai', 'Rasmalai (2 pcs)', 'Sugar Theory', 'Desserts', 190, 360, true, 'Soft chhena rounds in chilled saffron milk with pistachio.', 'photo-1578985545062-69928b1d9587', { dessert: true }),
-  dish('sizzling-brownie', 'Sizzling Brownie', 'Sugar Theory', 'Desserts', 310, 620, true, 'Warm chocolate brownie with vanilla ice cream and a hot chocolate pour.', 'photo-1563805042-7684c019e1cb', { dessert: true }),
+  dish('butter-chicken', 'Butter Chicken & Naan', 'Pepper & Hearth', 'North Indian', 460, 850, false, 'Slow-simmered tomato and cream curry, finished with fenugreek and soft tandoor naan.', { bestseller: true }),
+  dish('paneer-tikka', 'Smoky Paneer Tikka', 'Pepper & Hearth', 'North Indian', 320, 420, true, 'Charred paneer with a lively spice crust, mint chutney and a squeeze of lime.'),
+  dish('garlic-naan', 'Garlic Butter Naan', 'Pepper & Hearth', 'North Indian', 110, 310, true, 'Soft tandoor naan brushed with garlic butter and fresh coriander.'),
+  dish('podi-dosa', 'Podi Ghee Roast Dosa', 'Malli’s Tiffin Room', 'South Indian', 250, 510, true, 'A crisp rice-lentil dosa dusted with house podi and golden ghee.', { bestseller: true, fried: true }),
+  dish('idli-vada', 'Idli & Medu Vada', 'Malli’s Tiffin Room', 'South Indian', 190, 390, true, 'Soft idlis and a crisp lentil vada with coconut chutney and sambar.', { fried: true }),
+  dish('dum-biryani', 'Chicken Dum Biryani', 'Deccan Dum House', 'Hyderabadi', 390, 740, false, 'Fragrant basmati and spiced chicken sealed together for a slow dum finish.', { bestseller: true }),
+  dish('haleem', 'Hyderabadi Haleem', 'Deccan Dum House', 'Hyderabadi', 340, 610, false, 'A patient-cooked blend of lentils, wheat and tender meat, topped with fried onions.'),
+  dish('kosha', 'Kosha Mangsho', 'Mishti Bari', 'Bengali', 420, 680, false, 'A deep, slow-cooked Bengali mutton curry with warming whole spices.'),
+  dish('mishti-doi', 'Mishti Doi', 'Mishti Bari', 'Bengali', 140, 220, true, 'Sweetened, gently set yoghurt chilled in a clay pot.', { dessert: true }),
+  dish('khandvi', 'Khandvi Rolls', 'Saffron & Sesame', 'Gujarati', 180, 260, true, 'Delicate gram-flour rolls with mustard seeds, curry leaves and fresh coconut.', { bestseller: true }),
+  dish('gujarati-thali', 'Gujarati Mini Thali', 'Saffron & Sesame', 'Gujarati', 360, 780, true, 'A bright spread of seasonal shaak, dal, rice, rotli and something sweet.'),
+  dish('pepper-chicken', 'Chettinad Pepper Chicken', 'Karaikudi Table', 'Chettinad', 390, 590, false, 'Chicken tossed with cracked pepper, curry leaves and roasted masala.'),
+  dish('parotta', 'Ghee Roast Parotta', 'Karaikudi Table', 'Chettinad', 150, 430, true, 'Flaky layered parotta griddled until crisp at the edges.', { fried: true }),
+  dish('pav-bhaji', 'Mumbai Pav Bhaji', 'Chowpatty Stop', 'Indian Street Food', 220, 560, true, 'Butter-toasted pav beside a bright vegetable bhaji with lemon and onion.', { bestseller: true }),
+  dish('samosa-chaat', 'Samosa Chaat', 'Chowpatty Stop', 'Indian Street Food', 190, 480, true, 'Samosa layered with chickpeas, yoghurt and sweet-spicy chutneys.', { fried: true }),
+  dish('salmon-roll', 'Salmon Avocado Roll', 'Little Tokyo', 'Japanese', 520, 460, false, 'Salmon and ripe avocado rolled with seasoned rice and a dab of wasabi.', { bestseller: true }),
+  dish('tuna-roll', 'Spicy Tuna Roll', 'Little Tokyo', 'Japanese', 490, 430, false, 'Tuna, cucumber and seasoned rice wrapped with nori and a little chilli mayo.'),
+  dish('katsu-curry', 'Chicken Katsu Curry', 'Little Tokyo', 'Japanese', 480, 790, false, 'Crisp panko chicken over rice with a mild Japanese curry.', { fried: true }),
+  dish('bibimbap', 'Garden Bibimbap', 'Seoul Kitchen', 'Korean', 410, 620, true, 'Rice topped with seasoned vegetables, a sunny egg and gochujang on the side.'),
+  dish('kimchi-rice', 'Kimchi Fried Rice', 'Seoul Kitchen', 'Korean', 360, 570, true, 'Wok-fried rice with tangy kimchi, sesame and a soft egg on top.'),
+  dish('yangnyeom', 'Yangnyeom Fried Chicken', 'Seoul Kitchen', 'Korean', 490, 810, false, 'Crisp chicken glazed in a sticky, sweet-heat Korean chilli sauce.', { bestseller: true, fried: true }),
+  dish('chilli-paneer', 'Chilli Paneer', 'Wok This Way', 'Chinese', 330, 510, true, 'Paneer, peppers and spring onion tossed in a punchy Indo-Chinese sauce.'),
+  dish('manchow', 'Veg Manchow Soup', 'Wok This Way', 'Chinese', 190, 240, true, 'A warming, peppery vegetable broth topped with crisp noodles.'),
+  dish('pad-thai', 'Classic Pad Thai', 'Lemongrass Lane', 'Thai', 420, 680, true, 'Rice noodles, tamarind, crunchy peanuts and lime, tossed fresh in the wok.', { bestseller: true }),
+  dish('green-curry', 'Thai Green Curry', 'Lemongrass Lane', 'Thai', 450, 590, true, 'Fragrant coconut curry with basil and seasonal vegetables, served with jasmine rice.'),
+  dish('margherita', 'Woodfired Margherita', 'Forno Social', 'Italian', 440, 720, true, 'A blistered sourdough base with tomato, mozzarella and fragrant basil.', { bestseller: true }),
+  dish('tiramisu', 'Classic Tiramisu', 'Forno Social', 'Italian', 260, 390, true, 'Espresso-soaked sponge layered with mascarpone and a cocoa finish.', { dessert: true }),
+  dish('tacos', 'Al Pastor Tacos', 'Casa Picante', 'Mexican', 380, 560, false, 'Three soft tacos with achiote-spiced filling, pineapple salsa and lime.'),
+  dish('quesadilla', 'Cheesy Quesadilla', 'Casa Picante', 'Mexican', 340, 610, true, 'Golden folded tortilla with melted cheese, peppers and smoky salsa.'),
+  dish('lava-cake', 'Chocolate Lava Cake', 'Sugar Theory', 'Desserts', 240, 480, true, 'A warm cocoa cake with a soft, molten centre, ready for a spoon.', { bestseller: true, dessert: true }),
+  dish('gulab-jamun', 'Gulab Jamun (2 pcs)', 'Sugar Theory', 'Desserts', 160, 330, true, 'Soft milk dumplings steeped in cardamom-scented syrup.', { dessert: true }),
+  dish('tandoori-platter', 'Tandoori Sharing Platter', 'Pepper & Hearth', 'North Indian', 620, 920, false, 'A mixed grill of tandoori chicken, seekh kebab and charred peppers with green chutney.', { bestseller: true, fried: true }),
+  dish('chole-bhature', 'Chole Bhature', 'Pepper & Hearth', 'North Indian', 280, 740, true, 'Punjabi chickpeas simmered with warming spices beside two puffed bhature.', { fried: true }),
+  dish('dal-makhani', 'Dal Makhani', 'Pepper & Hearth', 'North Indian', 310, 560, true, 'Black lentils slow-cooked overnight with tomato, butter and a touch of cream.'),
+  dish('uttapam', 'Onion Tomato Uttapam', 'Malli’s Tiffin Room', 'South Indian', 220, 440, true, 'A soft, savoury rice pancake topped with onion, tomato and green chilli.'),
+  dish('appam-stew', 'Appam with Vegetable Stew', 'Malli’s Tiffin Room', 'South Indian', 290, 520, true, 'Lacy appams served with vegetables in a gently spiced coconut milk stew.'),
+  dish('sambar-rice', 'Sambar Rice', 'Malli’s Tiffin Room', 'South Indian', 210, 430, true, 'Rice and lentils simmered with tamarind, vegetables and a fragrant tempering.'),
+  dish('kachhi-biryani', 'Kachhi Yakhni Mutton Biryani', 'Deccan Dum House', 'Hyderabadi', 520, 890, false, 'Marinated mutton and basmati cook together under a sealed, slow-steamed lid.', { bestseller: true }),
+  dish('mirchi-salan', 'Mirchi ka Salan', 'Deccan Dum House', 'Hyderabadi', 240, 390, true, 'Green chillies in a tangy peanut, sesame and tamarind gravy.'),
+  dish('shorshe-ilish', 'Shorshe Ilish', 'Mishti Bari', 'Bengali', 490, 610, false, 'Hilsa steamed in a bright mustard and green-chilli sauce.'),
+  dish('dhokar-dalna', 'Dhokar Dalna', 'Mishti Bari', 'Bengali', 310, 470, true, 'Bengal gram cakes simmered in a lightly spiced tomato and ginger gravy.'),
+  dish('luchi-aloor-dom', 'Luchi & Aloor Dom', 'Mishti Bari', 'Bengali', 280, 650, true, 'Puffed luchi with potatoes simmered in a gently spiced Bengali gravy.', { fried: true }),
+  dish('rosogolla', 'Rosogolla (2 pcs)', 'Mishti Bari', 'Bengali', 130, 290, true, 'Soft chhena dumplings soaked in a light, fragrant syrup.', { dessert: true }),
+  dish('sev-khaman', 'Sev Khaman', 'Saffron & Sesame', 'Gujarati', 170, 310, true, 'Steamed gram-flour cake finished with sev, green chilli and sweet chutney.'),
+  dish('khaman-dhokla', 'Nylon Khaman Dhokla', 'Saffron & Sesame', 'Gujarati', 160, 270, true, 'Soft, airy gram-flour squares topped with mustard seeds and coriander.'),
+  dish('thepla', 'Methi Thepla (3 pcs)', 'Saffron & Sesame', 'Gujarati', 190, 360, true, 'Fenugreek flatbreads with a mellow spice blend and cooling yoghurt.'),
+  dish('fafda-jalebi', 'Fafda & Jalebi', 'Saffron & Sesame', 'Gujarati', 230, 590, true, 'Crisp chickpea-flour ribbons with warm, syrupy jalebi.', { dessert: true, fried: true }),
+  dish('kozhi-kuzhambu', 'Kozhi Kuzhambu', 'Karaikudi Table', 'Chettinad', 370, 630, false, 'Chicken in a bold Chettinad gravy with toasted spices and curry leaves.'),
+  dish('meen-varuval', 'Meen Varuval', 'Karaikudi Table', 'Chettinad', 430, 510, false, 'Fish steaks coated in peppery masala and pan-fried until crisp.', { fried: true }),
+  dish('pani-puri', 'Pani Puri (6 pcs)', 'Chowpatty Stop', 'Indian Street Food', 140, 290, true, 'Crisp puris with potato, chickpeas and a sharp mint-tamarind pani.', { bestseller: true }),
+  dish('vada-pav', 'Mumbai Vada Pav', 'Chowpatty Stop', 'Indian Street Food', 130, 430, true, 'Spiced potato fritter tucked into a soft pav with garlic chutney.', { fried: true }),
+  dish('aloo-tikki', 'Aloo Tikki Chaat', 'Chowpatty Stop', 'Indian Street Food', 180, 390, true, 'Crisp potato patties topped with chickpeas, yoghurt and two chutneys.', { fried: true }),
+  dish('chole-kulche', 'Amritsari Chole Kulche', 'Chowpatty Stop', 'Indian Street Food', 240, 610, true, 'Flaky kulcha with tangy chickpeas, onion and a wedge of lemon.'),
+  dish('tonkotsu-ramen', 'Tonkotsu Ramen', 'Little Tokyo', 'Japanese', 510, 790, false, 'Rich pork broth with noodles, bamboo shoots, greens and a jammy egg.', { bestseller: true }),
+  dish('gyoza', 'Pan-Seared Chicken Gyoza', 'Little Tokyo', 'Japanese', 320, 410, false, 'Six dumplings with crisp golden bases and a ginger-soy dipping sauce.'),
+  dish('tempura', 'Prawn Tempura', 'Little Tokyo', 'Japanese', 460, 520, false, 'Lightly battered prawns fried crisp and served with tentsuyu dip.', { fried: true }),
+  dish('tteokbokki', 'Spicy Tteokbokki', 'Seoul Kitchen', 'Korean', 350, 540, true, 'Chewy rice cakes in a glossy gochujang sauce with scallions.', { bestseller: true }),
+  dish('jjajangmyeon', 'Jjajangmyeon', 'Seoul Kitchen', 'Korean', 390, 680, false, 'Springy noodles with a savoury black-bean sauce and diced vegetables.'),
+  dish('schezwan-noodles', 'Schezwan Hakka Noodles', 'Wok This Way', 'Chinese', 290, 540, true, 'Wok-tossed noodles with vegetables and a lively chilli-garlic sauce.'),
+  dish('dim-sum', 'Steamed Vegetable Dim Sum', 'Wok This Way', 'Chinese', 280, 320, true, 'Delicate dumplings filled with seasoned vegetables and served with chilli oil.'),
+  dish('chilli-chicken', 'Chilli Chicken', 'Wok This Way', 'Chinese', 360, 570, false, 'Crisp chicken tossed with chillies, peppers and spring onion.', { fried: true }),
+  dish('manchurian', 'Veg Manchurian', 'Wok This Way', 'Chinese', 310, 520, true, 'Vegetable dumplings tossed with spring onion in a savoury Indo-Chinese sauce.'),
+  dish('mapo-tofu', 'Mapo Tofu', 'Wok This Way', 'Chinese', 340, 490, true, 'Silky tofu in a tingling Sichuan pepper and chilli bean sauce.'),
+  dish('red-curry', 'Thai Red Curry', 'Lemongrass Lane', 'Thai', 450, 610, true, 'Coconut curry with red chilli, basil and vegetables, served with jasmine rice.'),
+  dish('tom-yum', 'Tom Yum Soup', 'Lemongrass Lane', 'Thai', 330, 290, false, 'Hot-and-sour broth with lemongrass, lime and mushrooms.'),
+  dish('mango-sticky-rice', 'Mango Sticky Rice', 'Lemongrass Lane', 'Thai', 280, 430, true, 'Sweet coconut sticky rice with ripe mango and toasted sesame.', { dessert: true }),
+  dish('carbonara', 'Pasta Carbonara', 'Forno Social', 'Italian', 480, 760, false, 'Silky pasta with parmesan, cracked pepper and crisp pancetta.', { bestseller: true }),
+  dish('lasagna', 'Beef Lasagna', 'Forno Social', 'Italian', 510, 790, false, 'Layers of pasta, slow-cooked beef ragù and bubbling béchamel.'),
+  dish('alfredo', 'Fettuccine Alfredo', 'Forno Social', 'Italian', 430, 680, true, 'Ribbons of fettuccine in a parmesan cream sauce with parsley.'),
+  dish('birria-tacos', 'Birria Street Tacos', 'Casa Picante', 'Mexican', 430, 640, false, 'Slow-braised beef tacos with melted cheese and a side of dipping consomé.', { bestseller: true }),
+  dish('loaded-burrito', 'Loaded Bean Burrito', 'Casa Picante', 'Mexican', 390, 720, true, 'A warm tortilla packed with beans, rice, salsa, corn and melted cheese.'),
+  dish('nachos', 'Loaded Nachos', 'Casa Picante', 'Mexican', 360, 690, true, 'Crisp tortilla chips with beans, queso, jalapeño and fresh pico de gallo.'),
+  dish('churros', 'Cinnamon Churros', 'Casa Picante', 'Mexican', 240, 470, true, 'Warm cinnamon-sugar churros with a cup of dark chocolate dip.', { dessert: true, fried: true }),
+  dish('cheesecake', 'New York Cheesecake', 'Sugar Theory', 'Desserts', 280, 430, true, 'Creamy baked cheesecake on a crumbly biscuit base with berry compote.', { bestseller: true, dessert: true }),
+  dish('rasmalai', 'Rasmalai (2 pcs)', 'Sugar Theory', 'Desserts', 190, 360, true, 'Soft chhena rounds in chilled saffron milk with pistachio.', { dessert: true }),
+  dish('sizzling-brownie', 'Sizzling Brownie', 'Sugar Theory', 'Desserts', 310, 620, true, 'Warm chocolate brownie with vanilla ice cream and a hot chocolate pour.', { dessert: true }),
 ]
 
 const cuisines = ['All', ...Array.from(new Set(menu.map((item) => item.cuisine)))]
@@ -157,6 +158,19 @@ function readWallet() {
   }
 }
 
+type DishPhotoProps = { item: MenuItem; credit?: ImageCredit; compact?: boolean }
+
+function DishPhoto({ item, credit, compact = false }: DishPhotoProps) {
+  if (!credit) {
+    return <div className={compact ? 'dish-photo-placeholder compact' : 'dish-photo-placeholder'} role="img" aria-label={`Photo not added for ${item.name}`}><span>PHOTO NOT ADDED</span>{!compact && <small>{item.name}</small>}</div>
+  }
+
+  return <>
+    <img className={compact ? 'cart-dish-photo' : 'dish-photo'} src={`/images/dishes/${credit.file}`} alt={item.name} onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = item.image }} />
+    {!compact && <a className="photo-credit" href={credit.source} target="_blank" rel="noreferrer" aria-label={`Photo by ${credit.creator}, ${credit.license}, via Wikimedia Commons`}>Photo: {credit.creator} · {credit.license}</a>}
+  </>
+}
+
 function App() {
   const [activeCuisine, setActiveCuisine] = useState('All')
   const [search, setSearch] = useState('')
@@ -167,6 +181,7 @@ function App() {
   const [cartOpen, setCartOpen] = useState(false)
   const [wallet, setWallet] = useState(readWallet)
   const [roastLibrary, setRoastLibrary] = useState<RoastLibrary | null>(null)
+  const [imageCredits, setImageCredits] = useState<ImageCredits>({})
   const [message, setMessage] = useState('')
   const [orderComplete, setOrderComplete] = useState(false)
   const [receipt, setReceipt] = useState<OrderReceipt | null>(null)
@@ -205,6 +220,18 @@ function App() {
       })
       .then((data) => { if (isCurrent) setRoastLibrary(data) })
       .catch(() => { if (isCurrent) setRoastLibrary(null) })
+    return () => { isCurrent = false }
+  }, [])
+
+  useEffect(() => {
+    let isCurrent = true
+    fetch('/images/dishes/credits.json')
+      .then((response) => {
+        if (!response.ok) throw new Error('Could not load image credits')
+        return response.json() as Promise<ImageCredits>
+      })
+      .then((data) => { if (isCurrent) setImageCredits(data) })
+      .catch(() => { if (isCurrent) setImageCredits({}) })
     return () => { isCurrent = false }
   }, [])
 
@@ -345,7 +372,7 @@ function App() {
       <section className="browse-section" ref={browseSectionRef}><div className="section-heading"><div><p className="eyebrow">A MENU FOR EVERY MOOD</p><h2>{selectedRoast ? selectedRoast.name : 'Find your kind of delicious'}</h2></div><p className="results-count">{filteredMenu.length} dishes <span>·</span> 14 cuisines</p></div>
         {selectedRoast && <div className="selected-roast"><div><span className="eyebrow">{selectedRoast.cuisine.toUpperCase()} · ROAST SELECTED</span><p>{selectedRoast.reply}</p></div><button type="button" onClick={() => { setSelectedRoast(null); setActiveCuisine('All') }}>Clear roast ×</button></div>}
         <div className="category-row" aria-label="Filter by cuisine">{cuisines.map((cuisine, index) => <button key={cuisine} className={`category-chip ${activeCuisine === cuisine ? 'active' : ''}`} type="button" onClick={() => { setSelectedRoast(null); setActiveCuisine(cuisine) }}><span className="category-symbol">{index === 0 ? '✳' : ['◉', '◒', '⌁', '❋', '◇', '◌', '✦', '◎', '◍', '⌘', '◉', '✳', '◈', '♡'][index - 1]}</span>{cuisine}</button>)}</div>
-        {filteredMenu.length ? <div className="menu-grid">{filteredMenu.map((item, index) => <article className="dish-card" key={item.id} style={{ animationDelay: `${Math.min(index, 8) * 35}ms` }}><div className="dish-photo-wrap"><img className="dish-photo" src={item.localImage} alt={item.name} loading={index > 5 ? 'lazy' : 'eager'} onError={(event) => { if (event.currentTarget.src !== item.image) event.currentTarget.src = item.image }} /><span className="photo-label">{item.cuisine.toUpperCase()}</span>{item.bestseller && <span className="bestseller-tag">★ HOUSE FAVOURITE</span>}</div><div className="dish-details"><div className="dish-title-row"><span className={`diet-mark ${item.vegetarian ? 'veg' : 'nonveg'}`} aria-label={item.vegetarian ? 'Vegetarian' : 'Non-vegetarian'}><i /></span><h3>{item.name}</h3></div><p className="restaurant-name">{item.restaurant} <span>·</span> 25–35 min</p><p className="dish-description">{item.description}</p>{search.trim() && <p className="dish-roast">{dishRoastLines[item.id] ?? roastLibrary?.dishReplies[item.id]}</p>}<p className="dish-meta"><strong>₹{item.price}</strong><span className="meta-divider">·</span><span>~{item.calories} kcal</span><span className="meta-spacer" /><button className="add-button" type="button" aria-label={`Add ${item.name} to cart`} onClick={() => addToCart(item)}><span>+</span> ADD</button></p></div></article>)}</div> : <div className="empty-results"><span>⌕</span><h3>{selectedRoast ? selectedRoast.name : 'No dishes found'}</h3><p>{selectedRoast ? selectedRoast.reply : 'Try another search or choose a different cuisine.'}</p><button type="button" onClick={() => { setSearch(''); setSelectedRoast(null); setActiveCuisine('All') }}>Clear filters</button></div>}
+        {filteredMenu.length ? <div className="menu-grid">{filteredMenu.map((item, index) => <article className="dish-card" key={item.id} style={{ animationDelay: `${Math.min(index, 8) * 35}ms` }}><div className="dish-photo-wrap"><DishPhoto item={item} credit={imageCredits[item.id]} /><span className="photo-label">{item.cuisine.toUpperCase()}</span>{item.bestseller && <span className="bestseller-tag">★ HOUSE FAVOURITE</span>}</div><div className="dish-details"><div className="dish-title-row"><span className={`diet-mark ${item.vegetarian ? 'veg' : 'nonveg'}`} aria-label={item.vegetarian ? 'Vegetarian' : 'Non-vegetarian'}><i /></span><h3>{item.name}</h3></div><p className="restaurant-name">{item.restaurant} <span>·</span> 25–35 min</p><p className="dish-description">{item.description}</p>{search.trim() && <p className="dish-roast">{dishRoastLines[item.id] ?? roastLibrary?.dishReplies[item.id]}</p>}<p className="dish-meta"><strong>₹{item.price}</strong><span className="meta-divider">·</span><span>~{item.calories} kcal</span><span className="meta-spacer" /><button className="add-button" type="button" aria-label={`Add ${item.name} to cart`} onClick={() => addToCart(item)}><span>+</span> ADD</button></p></div></article>)}</div> : <div className="empty-results"><span>⌕</span><h3>{selectedRoast ? selectedRoast.name : 'No dishes found'}</h3><p>{selectedRoast ? selectedRoast.reply : 'Try another search or choose a different cuisine.'}</p><button type="button" onClick={() => { setSearch(''); setSelectedRoast(null); setActiveCuisine('All') }}>Clear filters</button></div>}
       </section>
       <footer className="site-footer"><a className="brand footer-brand" href="#top"><span className="brand-mark">m<span>.</span></span><span className="brand-name">mycravings<span>.in</span></span></a><span>Cravings stopped cold.</span><span>Demo wallet · No food is delivered</span></footer>
     </main>

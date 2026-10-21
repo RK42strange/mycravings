@@ -1,0 +1,18 @@
+{
+  "name": "mycravings.in",
+  "short_name": "mycravings",
+  "description": "Browse dishes, spend demo points, and get roasted. No food delivery or real payments.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f6f6f0",
+  "theme_color": "#1e4938",
+  "icons": [
+    {
+      "src": "/mycravings-mark.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
